@@ -5,38 +5,42 @@ import (
 	"sync"
 )
 
-func count(ch <-chan string, result *[]int, mu *sync.Mutex) {
+// count letters in word
+func count(ch <-chan string, result *[]int, wg *sync.WaitGroup) {
 	for word := range ch {
 		for _, char := range word {
-			//mu.Lock()
 			(*result)[char-97] += 1
-			//mu.Unlock()
 		}
+		wg.Done()
 	}
 }
 
-func main() {
-	//var result map[string]int
-	var result = new([26]int)[0:26]
-	//const workers = 3
-	var mu sync.Mutex
-	ch := make(chan string, 5)
-	var words = []string{"quick", "brown", "fox", "lazy", "dog"}
-	go count(ch, &result, &mu)
-	//for j:=0; j<workers; j++ {
-	//	go count(ch, &result)
-	//}
+// print as char:count
+func printResult(result []int) {
+	ans := make(map[string]int)
+	for i:= range result {
+		ans[string(97+i)] = result[i]
+	}
+	fmt.Println(ans)
+}
 
+func main() {
+	var words = []string{"quick", "brown", "fox", "lazy", "dog"}
+	var result = new([26]int)[0:26]
+	var wg sync.WaitGroup
+
+	// channel with buffer size of number of words
+	ch := make(chan string, len(words))
+
+	wg.Add(len(words))
+	go count(ch, &result, &wg)
+
+	// add words to channel
 	for _, word := range words {
 		ch <- word
 	}
 	defer close(ch)
+	wg.Wait()
 
-	fmt.Println(result)
-	//ans := make(map[string]int)
-	//for i:= range result {
-	//	ans[string(97+i)] = result[i]
-	//}
-	//fmt.Println(ans)
-
+	printResult(result)
 }
