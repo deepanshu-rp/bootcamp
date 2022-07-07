@@ -8,8 +8,9 @@ import (
 
 func deposit(balance *int, amount int, mu *sync.Mutex, wg *sync.WaitGroup) {
 	mu.Lock()
+	fmt.Println(*balance, amount, *balance+amount)
 	*balance += amount
-	fmt.Println("Previous:", *balance, "Current:", *balance+100)
+	fmt.Println("Previous:", *balance-100, "Current:", *balance)
 	mu.Unlock()
 
 	wg.Done()
