@@ -10,8 +10,12 @@ import (
 
 func GetProducts(c *gin.Context) {
 	var products []models.Product
-	models.GetProductsDB(&products)
-	c.JSONP(http.StatusOK, gin.H{"products": products})
+	if err := models.GetProductsDB(&products); err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSONP(http.StatusOK, gin.H{"products": products})
+	}
+
 }
 
 func AddProduct(c *gin.Context) {

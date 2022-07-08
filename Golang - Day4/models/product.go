@@ -6,8 +6,11 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func GetProductsDB(products *[]Product) {
-	config.DB.Orm.Find(&products)
+func GetProductsDB(products *[]Product) error {
+	if err := config.DB.Orm.Find(&products).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
 func AddProductDB(product *Product) error {
