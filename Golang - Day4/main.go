@@ -3,6 +3,7 @@ package main
 import (
 	"ecommerce/config"
 	"ecommerce/models"
+	"ecommerce/routes"
 	"fmt"
 
 	"github.com/jinzhu/gorm"
@@ -21,5 +22,9 @@ func main() {
 
 	defer config.DB.Close()
 	config.DB.AutoMigrate(&models.Product{})
+
+	r := routes.SetUpRouter()
+	//running
+	r.Run()
 
 }
