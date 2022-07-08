@@ -19,7 +19,7 @@ type DBConfig struct {
 func DBSetup() *DBConfig {
 	dbConfig := DBConfig{
 		Host:     "localhost",
-		Port:     8080,
+		Port:     3306,
 		User:     "root",
 		Password: "password@123",
 		DBName:   "ecommerce",
