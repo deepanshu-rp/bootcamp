@@ -27,7 +27,7 @@ func DBSetup() *DBConfig {
 	return &dbConfig
 }
 
-func DBUrl(dbConfig DBConfig) string {
+func DBUrl(dbConfig *DBConfig) string {
 	return fmt.Sprintf(
 		"%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
 		dbConfig.User,
