@@ -7,5 +7,5 @@ import (
 )
 
 func GetProductsDB(products *[]Product) {
-	config.DB.Find(&products)
+	config.DB.Orm.Find(&products)
 }

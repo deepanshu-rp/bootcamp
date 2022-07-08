@@ -5,23 +5,28 @@ import (
 	"ecommerce/models"
 	"ecommerce/routes"
 	"fmt"
+	"sync"
 
 	"github.com/jinzhu/gorm"
 )
 
-var err error
-
 func main() {
 
 	// Connect to database
-	config.DB, err = gorm.Open("mysql", config.DBUrl(config.DBSetup()))
+
+	orm, err := gorm.Open("mysql", config.DBUrl(config.DBSetup()))
+	mu := &sync.Mutex{}
 
 	if err != nil {
 		fmt.Println(err)
 	}
+	config.DB = &config.Database{
+		Orm: orm,
+		Mu:  mu,
+	}
 
-	defer config.DB.Close()
-	config.DB.AutoMigrate(&models.Product{})
+	defer config.DB.Orm.Close()
+	config.DB.Orm.AutoMigrate(&models.Product{})
 
 	r := routes.SetUpRouter()
 	//running

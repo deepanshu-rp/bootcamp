@@ -2,11 +2,17 @@ package config
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/jinzhu/gorm"
 )
 
-var DB *gorm.DB
+type Database struct {
+	Orm *gorm.DB
+	Mu  *sync.Mutex
+}
+
+var DB *Database
 
 type DBConfig struct {
 	Host     string
