@@ -11,6 +11,7 @@ func SetUpRouter() *gin.Engine {
 	group := router.Group("/")
 	{
 		group.GET("products", controller.GetProducts)
+		group.POST("products/add", controller.AddProduct)
 	}
 	return router
 

@@ -9,3 +9,11 @@ import (
 func GetProductsDB(products *[]Product) {
 	config.DB.Orm.Find(&products)
 }
+
+func AddProductDB(product *Product) error {
+	err := config.DB.Orm.Create(&product).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
