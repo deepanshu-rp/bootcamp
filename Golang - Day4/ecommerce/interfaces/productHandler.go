@@ -76,3 +76,35 @@ func (pd *ProductDependency) GetProductByID(c *gin.Context) {
 	}
 
 }
+
+func (pd *ProductDependency) UpdateProduct(c *gin.Context) {
+	var updateProduct entity.ProductPatch
+
+	// Parse uuid
+	param := c.Params.ByName("id")
+	fmt.Print("Param : ", param)
+	id, e := uuid.Parse(param)
+	if e != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": e.Error()})
+		return
+	}
+
+	// Bind json
+	if err := c.ShouldBindJSON(&updateProduct); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+		return
+	}
+	// Get product
+	newProduct, err := pd.product.GetProductByID(id)
+	if err != nil {
+		c.JSON(http.StatusNoContent, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Patch product
+	if _, err := pd.product.UpdateProduct(newProduct); err != nil {
+		c.JSON(http.StatusNotModified, gin.H{"error": err.Error()})
+	} else {
+		c.JSON(http.StatusOK, updateProduct)
+	}
+}

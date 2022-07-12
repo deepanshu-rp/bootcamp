@@ -13,6 +13,11 @@ type Product struct {
 	RetailerId      uuid.UUID `json:"retailer_id" gorm:"retailer_id"`
 }
 
+type ProductPatch struct {
+	ProductPrice    int `json:"product_price"`
+	ProductQuantity int `json:"product_quantity"`
+}
+
 func (p Product) TableName() string {
 	return "product"
 }

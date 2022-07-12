@@ -10,4 +10,5 @@ type ProductRepository interface {
 	AddProduct(*entity.Product) (*entity.Product, error)
 	GetAllProducts() ([]entity.Product, error)
 	GetProductByID(uuid.UUID) (*entity.Product, error)
+	UpdateProduct(*entity.Product) (*entity.Product, error)
 }

@@ -15,6 +15,7 @@ type ProductAppInterface interface {
 	AddProduct(*entity.Product) (*entity.Product, error)
 	GetAllProducts() ([]entity.Product, error)
 	GetProductByID(uuid.UUID) (*entity.Product, error)
+	UpdateProduct(*entity.Product) (*entity.Product, error)
 }
 
 var _ ProductAppInterface = &productApp{}
@@ -28,4 +29,8 @@ func (p *productApp) GetAllProducts() ([]entity.Product, error) {
 }
 func (p *productApp) GetProductByID(uuid uuid.UUID) (*entity.Product, error) {
 	return p.product.GetProductByID(uuid)
+}
+
+func (p *productApp) UpdateProduct(product *entity.Product) (*entity.Product, error) {
+	return p.product.UpdateProduct(product)
 }

@@ -42,3 +42,10 @@ func (pgr *ProductGormRepo) GetProductByID(uuid uuid.UUID) (*entity.Product, err
 	}
 	return &product, nil
 }
+
+func (pgr *ProductGormRepo) UpdateProduct(product *entity.Product) (*entity.Product, error) {
+	if err := pgr.db.Model(&entity.Product{}).Where("product_id = ?", product.ProductId).Update("product_quantity", product.ProductQuantity).Error; err != nil {
+		return nil, err
+	}
+	return product, nil
+}
