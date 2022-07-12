@@ -27,11 +27,12 @@ func main() {
 		customerRoutes := gp.Group("/customer")
 		{
 			customerRoutes.POST("/add", customers.AddCustomer)
-			customerRoutes.GET("/find/:id", customers.GetCustomerByID)
+			customerRoutes.GET("/:id", customers.GetCustomerByID)
 		}
 		retailerRoutes := gp.Group("/retailer")
 		{
 			retailerRoutes.POST("/add", retailers.AddRetailer)
+			retailerRoutes.GET("/:id", retailers.GetRetailerByID)
 		}
 	}
 	router.Run()
