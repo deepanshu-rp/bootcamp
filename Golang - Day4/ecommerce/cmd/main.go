@@ -26,6 +26,7 @@ func main() {
 		customerRoutes := gp.Group("/customer")
 		{
 			customerRoutes.POST("/add", customers.AddCustomer)
+			customerRoutes.GET("/find/:id", customers.GetCustomerByID)
 		}
 	}
 	router.Run()

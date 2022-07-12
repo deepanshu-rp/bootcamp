@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	uuid "github.com/satori/go.uuid"
 )
 
 type CustomerDependency struct {
@@ -36,5 +37,23 @@ func (cd *CustomerDependency) AddCustomer(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusCreated, cust)
+
+}
+
+func (cd *CustomerDependency) GetCustomerByID(c *gin.Context) {
+	param := c.Params.ByName("id")
+
+	fmt.Print("Param : ", param)
+	id, e := uuid.FromString(param)
+
+	if e != nil {
+		c.AbortWithError(http.StatusNotFound, e)
+	} else {
+		if customer, err := cd.cust.GetCustomerByID(id); err != nil {
+			c.AbortWithStatus(http.StatusNotFound)
+		} else {
+			c.JSONP(http.StatusOK, customer)
+		}
+	}
 
 }

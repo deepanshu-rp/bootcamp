@@ -20,7 +20,12 @@ type Tabler interface {
 	TableName() string
 }
 
-// TableName overrides the table name used by User to `profiles`
+// TableName overrides the table name
 func (c Customer) TableName() string {
 	return "customer"
 }
+
+// TODO
+// func (c Customer) ValidateInput(map[string]string) {
+
+// }
