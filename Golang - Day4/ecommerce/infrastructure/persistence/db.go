@@ -12,6 +12,7 @@ type Repositories struct {
 	CustomerRepo repository.CustomerRepository
 	RetailerRepo repository.RetailerRepository
 	ProductRepo  repository.ProductRepository
+	OrderRepo    repository.OrderRepository
 	db           *gorm.DB
 }
 
@@ -32,6 +33,7 @@ func NewRepositories(Dbdriver, DbUser, DbPassword, DbHost, DbName string, DbPort
 		CustomerRepo: NewCustomerGormRepo(db),
 		RetailerRepo: NewRetailerGormRepo(db),
 		ProductRepo:  NewProductGormRepo(db),
+		OrderRepo:    NewOrderGormRepo(db),
 		db:           db,
 	}, nil
 }

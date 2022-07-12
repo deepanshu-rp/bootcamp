@@ -18,6 +18,7 @@ func main() {
 	customers := interfaces.NewCustomerDependency(service.CustomerRepo)
 	retailers := interfaces.NewRetailerDependency(service.RetailerRepo)
 	products := interfaces.NewProductDependency(service.ProductRepo, service.RetailerRepo)
+	orders := interfaces.NewOrderDependency(service.OrderRepo)
 
 	router := gin.Default()
 	authorized := router.Group("/", gin.BasicAuth(gin.Accounts{
@@ -41,6 +42,10 @@ func main() {
 			productsRoutes.POST("/add", products.AddProduct)
 			productsRoutes.GET("/all", products.GetAllProducts)
 			productsRoutes.GET("/:id", products.GetProductByID)
+		}
+		orderRoutes := gp.Group("/order")
+		{
+			orderRoutes.GET("/:id", orders.GetOrderByID)
 		}
 	}
 
