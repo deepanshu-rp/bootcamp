@@ -15,6 +15,7 @@ func main() {
 	defer service.Close()
 
 	customers := interfaces.NewCustomerDependency(service.CustomerRepo)
+	retailers := interfaces.NewRetailerDependency(service.RetailerRepo)
 
 	router := gin.Default()
 	authorized := router.Group("/", gin.BasicAuth(gin.Accounts{
@@ -27,6 +28,10 @@ func main() {
 		{
 			customerRoutes.POST("/add", customers.AddCustomer)
 			customerRoutes.GET("/find/:id", customers.GetCustomerByID)
+		}
+		retailerRoutes := gp.Group("/retailer")
+		{
+			retailerRoutes.POST("/add", retailers.AddRetailer)
 		}
 	}
 	router.Run()
