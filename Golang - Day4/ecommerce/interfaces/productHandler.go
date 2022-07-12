@@ -3,18 +3,12 @@ package interfaces
 import (
 	"ecommerce/application"
 	"ecommerce/domain/entity"
+	"ecommerce/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
-
-type productsResponse struct {
-	ProductId       uuid.UUID `json:"product_id"`
-	ProductName     string    `json:"product_name"`
-	ProductPrice    int       `json:"product_price"`
-	ProductQuantity int       `json:"product_quantity"`
-}
 
 type ProductDependency struct {
 	product application.ProductAppInterface
@@ -46,13 +40,8 @@ func (pd *ProductDependency) AddProduct(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
-	c.JSON(http.StatusCreated, gin.H{
-		"id":           productNew.ProductId,
-		"product_name": productNew.ProductName,
-		"price":        productNew.ProductPrice,
-		"quantity":     productNew.ProductQuantity,
-		"message":      "product successfully added",
-	})
+	response := utils.FormatProductAddedResponse(*productNew)
+	c.JSON(http.StatusCreated, response)
 }
 
 func (pd *ProductDependency) GetAllProducts(c *gin.Context) {
@@ -64,15 +53,6 @@ func (pd *ProductDependency) GetAllProducts(c *gin.Context) {
 		})
 		return
 	}
-	var result []productsResponse
-	for _, p := range products {
-		val := productsResponse{
-			ProductId:       p.ProductId,
-			ProductName:     p.ProductName,
-			ProductPrice:    p.ProductPrice,
-			ProductQuantity: p.ProductQuantity,
-		}
-		result = append(result, val)
-	}
+	result := utils.FormatProductListResponse(products)
 	c.JSONP(http.StatusOK, gin.H{"products": result})
 }
