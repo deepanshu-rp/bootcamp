@@ -4,6 +4,7 @@ import (
 	"ecommerce/domain/entity"
 	"ecommerce/domain/repository"
 
+	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
 )
 
@@ -31,4 +32,13 @@ func (pgr *ProductGormRepo) GetAllProducts() ([]entity.Product, error) {
 		return nil, err
 	}
 	return products, nil
+}
+
+func (pgr *ProductGormRepo) GetProductByID(uuid uuid.UUID) (*entity.Product, error) {
+	var product entity.Product
+
+	if err := pgr.db.Where("product_id = ?", uuid).Find(&product).Error; err != nil {
+		return nil, err
+	}
+	return &product, nil
 }

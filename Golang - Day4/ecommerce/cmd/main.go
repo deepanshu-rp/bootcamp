@@ -3,6 +3,7 @@ package main
 import (
 	"ecommerce/infrastructure/persistence"
 	"ecommerce/interfaces"
+	"errors"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,6 +17,7 @@ func main() {
 
 	customers := interfaces.NewCustomerDependency(service.CustomerRepo)
 	retailers := interfaces.NewRetailerDependency(service.RetailerRepo)
+	products := interfaces.NewProductDependency(service.ProductRepo, service.RetailerRepo)
 
 	router := gin.Default()
 	authorized := router.Group("/", gin.BasicAuth(gin.Accounts{
@@ -34,7 +36,17 @@ func main() {
 			retailerRoutes.POST("/add", retailers.AddRetailer)
 			retailerRoutes.GET("/:id", retailers.GetRetailerByID)
 		}
+		productsRoutes := gp.Group("/product")
+		{
+			productsRoutes.POST("/add", products.AddProduct)
+			productsRoutes.GET("/all", products.GetAllProducts)
+			productsRoutes.GET("/:id", products.GetProductByID)
+		}
 	}
-	router.Run()
+
+	err = router.Run()
+	if err != nil {
+		panic(errors.New("Unable to configure router"))
+	}
 
 }
