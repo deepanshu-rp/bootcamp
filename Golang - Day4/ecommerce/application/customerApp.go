@@ -4,7 +4,7 @@ import (
 	"ecommerce/domain/entity"
 	"ecommerce/domain/repository"
 
-	uuid "github.com/satori/go.uuid"
+	"github.com/google/uuid"
 )
 
 type customerApp struct {

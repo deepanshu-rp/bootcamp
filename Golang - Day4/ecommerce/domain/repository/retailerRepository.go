@@ -3,7 +3,7 @@ package repository
 import (
 	"ecommerce/domain/entity"
 
-	uuid "github.com/satori/go.uuid"
+	"github.com/google/uuid"
 )
 
 type RetailerRepository interface {

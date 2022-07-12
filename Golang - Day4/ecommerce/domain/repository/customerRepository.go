@@ -4,7 +4,7 @@ import (
 	"ecommerce/domain/entity"
 	"errors"
 
-	uuid "github.com/satori/go.uuid"
+	"github.com/google/uuid"
 )
 
 var ErrAddCustomer = errors.New("Couldn't add customer")

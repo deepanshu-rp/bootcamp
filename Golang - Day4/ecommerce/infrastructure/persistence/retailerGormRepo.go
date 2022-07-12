@@ -4,8 +4,8 @@ import (
 	"ecommerce/domain/entity"
 	"ecommerce/domain/repository"
 
+	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
-	uuid "github.com/satori/go.uuid"
 )
 
 type RetailerGormRepo struct {

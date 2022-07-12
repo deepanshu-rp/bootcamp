@@ -1,8 +1,8 @@
 package entity
 
 import (
+	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
-	uuid "github.com/satori/go.uuid"
 )
 
 type Customer struct {
@@ -12,7 +12,7 @@ type Customer struct {
 }
 
 func (customer *Customer) BeforeCreate(scope *gorm.Scope) error {
-	id := uuid.NewV4().String()
+	id := uuid.New().String()
 	return scope.SetColumn("customer_id", id)
 }
 

@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	uuid "github.com/satori/go.uuid"
+	"github.com/google/uuid"
 )
 
 type RetailerDependency struct {
@@ -40,7 +40,7 @@ func (rd *RetailerDependency) GetRetailerByID(c *gin.Context) {
 	param := c.Params.ByName("id")
 
 	fmt.Print("Param : ", param)
-	id, e := uuid.FromString(param)
+	id, e := uuid.Parse(param)
 
 	if e != nil {
 		c.AbortWithError(http.StatusNotFound, e)
