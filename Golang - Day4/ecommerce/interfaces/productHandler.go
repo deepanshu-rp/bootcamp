@@ -100,11 +100,13 @@ func (pd *ProductDependency) UpdateProduct(c *gin.Context) {
 		c.JSON(http.StatusNoContent, gin.H{"error": err.Error()})
 		return
 	}
+	newProduct.ProductQuantity = updateProduct.ProductQuantity
+	newProduct.ProductPrice = updateProduct.ProductPrice
 
 	// Patch product
 	if _, err := pd.product.UpdateProduct(newProduct); err != nil {
 		c.JSON(http.StatusNotModified, gin.H{"error": err.Error()})
 	} else {
-		c.JSON(http.StatusOK, updateProduct)
+		c.JSON(http.StatusOK, newProduct)
 	}
 }
