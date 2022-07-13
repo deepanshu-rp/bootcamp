@@ -9,7 +9,10 @@ import (
 )
 
 var (
-	ErrInvalidJSONBody = errors.New("Invalid JSON body")
+	ErrInvalidJSONBody     = errors.New("Invalid JSON body")
+	ErrInvalidCustomerUUID = errors.New("Invalid customer UUID")
+	ErrCustomerNotFound    = errors.New("Customer with given UUID not present in database")
+	ErrCustomerNotAdded    = errors.New("Customer with given information couldn't be added to the database")
 )
 
 type Customer struct {
@@ -32,13 +35,13 @@ func (c Customer) TableName() string {
 	return "customer"
 }
 
-func (c Customer) ValidateInput() error {
+func (c Customer) ValidateInput() (error, error) {
 	err := validation.ValidateStruct(&c,
 		validation.Field(&c.CustomerName, validation.Required, validation.Length(1, 20)),
 		validation.Field(&c.CustomerAddress, validation.Required, validation.Length(1, 45)),
 	)
 	if err != nil {
-		return ErrInvalidJSONBody
+		return ErrInvalidJSONBody, err
 	}
-	return nil
+	return nil, nil
 }
