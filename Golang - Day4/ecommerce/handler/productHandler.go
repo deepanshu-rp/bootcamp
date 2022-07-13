@@ -3,8 +3,8 @@ package handler
 import (
 	"ecommerce/application"
 	"ecommerce/domain/entity"
+	"ecommerce/handler/utils"
 	"ecommerce/infrastructure/concurrency"
-	"ecommerce/utils"
 	"fmt"
 	"net/http"
 
