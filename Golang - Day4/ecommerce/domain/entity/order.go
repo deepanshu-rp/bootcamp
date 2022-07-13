@@ -17,6 +17,7 @@ type OrderDetail struct {
 	OrderStatus     string    `json:"order_status" gorm:"order_status"`
 }
 
+// For parsing order json
 type OrderRecieved struct {
 	OrderId    uuid.UUID   `json:"order_id"`
 	CustomerId uuid.UUID   `json:"customer_id"`

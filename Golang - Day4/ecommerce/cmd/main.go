@@ -3,6 +3,7 @@ package main
 import (
 	"ecommerce/handler"
 	"ecommerce/infrastructure/persistence"
+	"ecommerce/routes"
 	"errors"
 )
 
@@ -15,7 +16,7 @@ func main() {
 
 	// orders := interfaces.NewOrderDependency(service.OrderRepo)
 
-	router := handler.SetUpRouter(
+	router := routes.SetUpRouter(
 		handler.NewCustomerService(repos.CustomerRepo),
 		handler.NewRetailerService(repos.RetailerRepo),
 		handler.NewProductService(repos.ProductRepo, repos.RetailerRepo),
