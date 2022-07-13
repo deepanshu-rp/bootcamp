@@ -1,4 +1,4 @@
-package interfaces
+package handler
 
 import (
 	"ecommerce/application"
@@ -11,16 +11,16 @@ import (
 	"github.com/google/uuid"
 )
 
-type ProductDependency struct {
+type ProductService struct {
 	product application.ProductAppInterface
 	retail  application.RetailerAppInterface
 }
 
-func NewProductDependency(pdt application.ProductAppInterface, rt application.RetailerAppInterface) *ProductDependency {
-	return &ProductDependency{product: pdt, retail: rt}
+func NewProductService(pdt application.ProductAppInterface, rt application.RetailerAppInterface) *ProductService {
+	return &ProductService{product: pdt, retail: rt}
 }
 
-func (pd *ProductDependency) AddProduct(c *gin.Context) {
+func (pd *ProductService) AddProduct(c *gin.Context) {
 	var product entity.Product
 	// Bind request body
 	if err := c.ShouldBindJSON(&product); err != nil {
@@ -45,7 +45,7 @@ func (pd *ProductDependency) AddProduct(c *gin.Context) {
 	c.JSON(http.StatusCreated, response)
 }
 
-func (pd *ProductDependency) GetAllProducts(c *gin.Context) {
+func (pd *ProductService) GetAllProducts(c *gin.Context) {
 
 	products, err := pd.product.GetAllProducts()
 	if err != nil {
@@ -58,7 +58,7 @@ func (pd *ProductDependency) GetAllProducts(c *gin.Context) {
 	c.JSONP(http.StatusOK, gin.H{"products": result})
 }
 
-func (pd *ProductDependency) GetProductByID(c *gin.Context) {
+func (pd *ProductService) GetProductByID(c *gin.Context) {
 	param := c.Params.ByName("id")
 
 	fmt.Print("Param : ", param)
@@ -77,7 +77,7 @@ func (pd *ProductDependency) GetProductByID(c *gin.Context) {
 
 }
 
-func (pd *ProductDependency) UpdateProduct(c *gin.Context) {
+func (pd *ProductService) UpdateProduct(c *gin.Context) {
 	var updateProduct entity.ProductPatch
 
 	// Parse uuid
@@ -94,6 +94,7 @@ func (pd *ProductDependency) UpdateProduct(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 		return
 	}
+
 	// Get product
 	newProduct, err := pd.product.GetProductByID(id)
 	if err != nil {
@@ -103,6 +104,7 @@ func (pd *ProductDependency) UpdateProduct(c *gin.Context) {
 	newProduct.ProductQuantity = updateProduct.ProductQuantity
 	newProduct.ProductPrice = updateProduct.ProductPrice
 
+	// TODO: Add lock mechanism
 	// Patch product
 	if _, err := pd.product.UpdateProduct(newProduct); err != nil {
 		c.JSON(http.StatusNotModified, gin.H{"error": err.Error()})

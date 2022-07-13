@@ -1,4 +1,4 @@
-package interfaces
+package handler
 
 import (
 	"ecommerce/application"
@@ -10,16 +10,16 @@ import (
 	"github.com/google/uuid"
 )
 
-type RetailerDependency struct {
+type RetailerService struct {
 	retail application.RetailerAppInterface
 }
 
 // args??
-func NewRetailerDependency(rt application.RetailerAppInterface) *RetailerDependency {
-	return &RetailerDependency{retail: rt}
+func NewRetailerService(rt application.RetailerAppInterface) *RetailerService {
+	return &RetailerService{retail: rt}
 }
 
-func (rd *RetailerDependency) AddRetailer(c *gin.Context) {
+func (rd *RetailerService) AddRetailer(c *gin.Context) {
 	var retailer entity.Retailer
 	// Bind request body
 	if err := c.ShouldBindJSON(&retailer); err != nil {
@@ -36,7 +36,7 @@ func (rd *RetailerDependency) AddRetailer(c *gin.Context) {
 	c.JSON(http.StatusCreated, retailerNew)
 }
 
-func (rd *RetailerDependency) GetRetailerByID(c *gin.Context) {
+func (rd *RetailerService) GetRetailerByID(c *gin.Context) {
 	param := c.Params.ByName("id")
 
 	fmt.Print("Param : ", param)

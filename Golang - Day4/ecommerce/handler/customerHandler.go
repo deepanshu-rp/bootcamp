@@ -1,4 +1,4 @@
-package interfaces
+package handler
 
 import (
 	"ecommerce/application"
@@ -10,15 +10,15 @@ import (
 	"github.com/google/uuid"
 )
 
-type CustomerDependency struct {
+type CustomerService struct {
 	cust application.CustomerAppInterface
 }
 
-func NewCustomerDependency(cd application.CustomerAppInterface) *CustomerDependency {
-	return &CustomerDependency{cust: cd}
+func NewCustomerService(cd application.CustomerAppInterface) *CustomerService {
+	return &CustomerService{cust: cd}
 }
 
-func (cd *CustomerDependency) AddCustomer(c *gin.Context) {
+func (cd *CustomerService) AddCustomer(c *gin.Context) {
 	var customer entity.Customer
 
 	// Bind request body
@@ -40,7 +40,7 @@ func (cd *CustomerDependency) AddCustomer(c *gin.Context) {
 
 }
 
-func (cd *CustomerDependency) GetCustomerByID(c *gin.Context) {
+func (cd *CustomerService) GetCustomerByID(c *gin.Context) {
 	param := c.Params.ByName("id")
 
 	fmt.Print("Param : ", param)
