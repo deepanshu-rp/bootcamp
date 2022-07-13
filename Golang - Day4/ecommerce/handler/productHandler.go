@@ -3,6 +3,7 @@ package handler
 import (
 	"ecommerce/application"
 	"ecommerce/domain/entity"
+	"ecommerce/infrastructure/concurrency"
 	"ecommerce/utils"
 	"fmt"
 	"net/http"
@@ -30,7 +31,6 @@ func (pd *ProductService) AddProduct(c *gin.Context) {
 	// TODO: Validate product
 
 	// Check if retailer valid
-
 	if _, err := pd.retail.GetRetailerByID(uuid.UUID(product.RetailerId)); err != nil {
 		c.JSON(http.StatusNotFound, err.Error())
 		return
@@ -104,7 +104,14 @@ func (pd *ProductService) UpdateProduct(c *gin.Context) {
 	newProduct.ProductQuantity = updateProduct.ProductQuantity
 	newProduct.ProductPrice = updateProduct.ProductPrice
 
-	// TODO: Add lock mechanism
+	// Concurrency management
+	if locked := concurrency.Mutex.Lock(newProduct.ProductId); !locked {
+		c.JSON(http.StatusPreconditionFailed, gin.H{"error": "can't apply lock"})
+		return
+	}
+	defer concurrency.Mutex.Unlock(newProduct.ProductId)
+	// time.Sleep(5 * time.Second)
+
 	// Patch product
 	if _, err := pd.product.UpdateProduct(newProduct); err != nil {
 		c.JSON(http.StatusNotModified, gin.H{"error": err.Error()})
