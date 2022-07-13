@@ -14,8 +14,6 @@ func main() {
 	}
 	defer repos.Close()
 
-	// orders := interfaces.NewOrderDependency(service.OrderRepo)
-
 	router := routes.SetUpRouter(
 		handler.NewCustomerService(repos.CustomerRepo),
 		handler.NewRetailerService(repos.RetailerRepo),

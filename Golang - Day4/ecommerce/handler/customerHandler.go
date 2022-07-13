@@ -28,9 +28,13 @@ func (cd *CustomerService) AddCustomer(c *gin.Context) {
 		return
 	}
 
-	// TODO: Validate customer
+	// Validate customer
+	if err := customer.ValidateInput(); err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
 
-	// TODO: DB ops
+	// Add to DB
 	cust, err := cd.cust.AddCustomer(&customer)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)

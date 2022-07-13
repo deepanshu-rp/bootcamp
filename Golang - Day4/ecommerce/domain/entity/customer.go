@@ -1,8 +1,15 @@
 package entity
 
 import (
+	"errors"
+
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
+)
+
+var (
+	ErrInvalidJSONBody = errors.New("Invalid JSON body")
 )
 
 type Customer struct {
@@ -25,7 +32,13 @@ func (c Customer) TableName() string {
 	return "customer"
 }
 
-// TODO
-// func (c Customer) ValidateInput(map[string]string) {
-
-// }
+func (c Customer) ValidateInput() error {
+	err := validation.ValidateStruct(&c,
+		validation.Field(&c.CustomerName, validation.Required, validation.Length(1, 20)),
+		validation.Field(&c.CustomerAddress, validation.Required, validation.Length(1, 45)),
+	)
+	if err != nil {
+		return ErrInvalidJSONBody
+	}
+	return nil
+}
