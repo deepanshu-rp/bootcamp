@@ -3,8 +3,10 @@ package handler
 import (
 	"ecommerce/application"
 	"ecommerce/domain/entity"
+	"ecommerce/infrastructure/concurrency"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -54,8 +56,15 @@ func (od *OrderService) AddMultipleOrders(c *gin.Context) {
 		status := "not placed"
 		product, err := od.product.GetProductByID(ord.ProductId)
 		if err == nil && product.ProductQuantity-ord.ProductQuantity >= 0 {
-			print(product.ProductQuantity - ord.ProductQuantity)
 			product.ProductQuantity -= ord.ProductQuantity
+
+			// Apply lock
+			if locked := concurrency.Mutex.Lock(product.ProductId); !locked {
+				c.JSON(http.StatusPreconditionFailed, gin.H{"error": "can't apply lock"})
+				return
+			}
+			defer concurrency.Mutex.Unlock(product.ProductId)
+			time.Sleep(10 * time.Second)
 			// Patch product
 			if _, patchErr := od.product.UpdateProduct(product); patchErr == nil {
 				status = "placed"
