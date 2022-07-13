@@ -37,7 +37,7 @@ func (pgr *ProductGormRepo) GetAllProducts() ([]entity.Product, error) {
 func (pgr *ProductGormRepo) GetProductByID(uuid uuid.UUID) (*entity.Product, error) {
 	var product entity.Product
 
-	if err := pgr.db.Where("product_id = ?", uuid).Find(&product).Error; err != nil {
+	if err := pgr.db.Model(&entity.Product{}).Where("product_id = ?", uuid).Find(&product).Error; err != nil {
 		return nil, err
 	}
 	return &product, nil
