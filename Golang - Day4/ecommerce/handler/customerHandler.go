@@ -25,7 +25,7 @@ func (cd *CustomerService) AddCustomer(c *gin.Context) {
 	// Bind request body
 	if err := c.ShouldBindJSON(&customer); err != nil {
 		fmt.Println(err)
-		c.JSON(http.StatusBadRequest, utils.FormatErrorResponse(entity.ErrInvalidJSONBody.Error(), err.Error()))
+		c.JSON(http.StatusBadRequest, utils.FormatErrorResponse(entity.ErrInvalidCustomerJSON.Error(), err.Error()))
 		return
 	}
 
@@ -38,7 +38,7 @@ func (cd *CustomerService) AddCustomer(c *gin.Context) {
 	// Add to DB
 	cust, err := cd.cust.AddCustomer(&customer)
 	if err != nil {
-		c.JSON(http.StatusNotImplemented, utils.FormatErrorResponse(entity.ErrCustomerNotAdded.Error(), err.Error()))
+		c.JSON(http.StatusInternalServerError, utils.FormatErrorResponse(entity.ErrCustomerNotAdded.Error(), err.Error()))
 		return
 	}
 	c.JSON(http.StatusCreated, cust)

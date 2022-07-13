@@ -6,7 +6,6 @@ import (
 	"ecommerce/infrastructure/concurrency"
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -30,7 +29,7 @@ func (od *OrderService) AddMultipleOrders(c *gin.Context) {
 
 	// Bind request body
 	if err := c.ShouldBindJSON(&orderRecieved); err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -44,10 +43,9 @@ func (od *OrderService) AddMultipleOrders(c *gin.Context) {
 	// Add to order table
 	order, e := od.order.AddOrder(&entity.Order{OrderId: orderRecieved.OrderId, CustomerId: orderRecieved.CustomerId})
 	if e != nil {
-		c.JSON(http.StatusNotImplemented, gin.H{"error": e.Error()})
+		c.JSON(http.StatusNotAcceptable, gin.H{"error": e.Error()})
 		return
 	}
-	fmt.Println(orderRecieved)
 
 	// Add order details
 	for _, ord := range orderRecieved.Specs {
@@ -60,11 +58,12 @@ func (od *OrderService) AddMultipleOrders(c *gin.Context) {
 
 			// Apply lock
 			if locked := concurrency.Mutex.Lock(product.ProductId); !locked {
-				c.JSON(http.StatusPreconditionFailed, gin.H{"error": "can't apply lock"})
+				c.JSON(http.StatusLocked, gin.H{"error": "can't apply lock"})
 				return
 			}
 			defer concurrency.Mutex.Unlock(product.ProductId)
-			time.Sleep(10 * time.Second)
+			// time.Sleep(10 * time.Second)
+
 			// Patch product
 			if _, patchErr := od.product.UpdateProduct(product); patchErr == nil {
 				status = "placed"

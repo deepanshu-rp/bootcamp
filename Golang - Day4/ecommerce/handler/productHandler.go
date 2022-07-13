@@ -25,10 +25,9 @@ func (pd *ProductService) AddProduct(c *gin.Context) {
 	var product entity.Product
 	// Bind request body
 	if err := c.ShouldBindJSON(&product); err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	// TODO: Validate product
 
 	// Check if retailer valid
 	if _, err := pd.retail.GetRetailerByID(uuid.UUID(product.RetailerId)); err != nil {
@@ -91,14 +90,14 @@ func (pd *ProductService) UpdateProduct(c *gin.Context) {
 
 	// Bind json
 	if err := c.ShouldBindJSON(&updateProduct); err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	// Get product
 	newProduct, err := pd.product.GetProductByID(id)
 	if err != nil {
-		c.JSON(http.StatusNoContent, gin.H{"error": err.Error()})
+		c.JSON(http.StatusPreconditionFailed, gin.H{"error": err.Error()})
 		return
 	}
 	newProduct.ProductQuantity = updateProduct.ProductQuantity
@@ -106,7 +105,7 @@ func (pd *ProductService) UpdateProduct(c *gin.Context) {
 
 	// Concurrency management
 	if locked := concurrency.Mutex.Lock(newProduct.ProductId); !locked {
-		c.JSON(http.StatusPreconditionFailed, gin.H{"error": "can't apply lock"})
+		c.JSON(http.StatusLocked, gin.H{"error": "can't apply lock"})
 		return
 	}
 	defer concurrency.Mutex.Unlock(newProduct.ProductId)

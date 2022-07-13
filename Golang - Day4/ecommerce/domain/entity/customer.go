@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrInvalidJSONBody     = errors.New("Invalid JSON body")
+	ErrInvalidCustomerJSON = errors.New("Invalid JSON body")
 	ErrInvalidCustomerUUID = errors.New("Invalid customer UUID")
 	ErrCustomerNotFound    = errors.New("Customer with given UUID not present in database")
 	ErrCustomerNotAdded    = errors.New("Customer with given information couldn't be added to the database")
@@ -41,7 +41,7 @@ func (c Customer) ValidateInput() (error, error) {
 		validation.Field(&c.CustomerAddress, validation.Required, validation.Length(1, 45)),
 	)
 	if err != nil {
-		return ErrInvalidJSONBody, err
+		return ErrInvalidCustomerJSON, err
 	}
 	return nil, nil
 }

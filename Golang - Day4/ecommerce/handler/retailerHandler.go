@@ -23,10 +23,9 @@ func (rd *RetailerService) AddRetailer(c *gin.Context) {
 	var retailer entity.Retailer
 	// Bind request body
 	if err := c.ShouldBindJSON(&retailer); err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	// TODO: Validate retailer
 
 	retailerNew, err := rd.retail.AddRetailer(&retailer)
 	if err != nil {
@@ -43,7 +42,7 @@ func (rd *RetailerService) GetRetailerByID(c *gin.Context) {
 	id, e := uuid.Parse(param)
 
 	if e != nil {
-		c.AbortWithError(http.StatusNotFound, e)
+		c.AbortWithError(http.StatusBadRequest, e)
 	} else {
 		if retailer, err := rd.retail.GetRetailerByID(id); err != nil {
 			c.AbortWithStatus(http.StatusNotFound)
