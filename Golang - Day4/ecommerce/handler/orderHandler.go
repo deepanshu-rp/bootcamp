@@ -12,15 +12,15 @@ import (
 )
 
 type OrderService struct {
-	order    application.OrderAppInterface
-	customer application.CustomerAppInterface
-	product  application.ProductAppInterface
+	Order    application.OrderAppInterface
+	Customer application.CustomerAppInterface
+	Product  application.ProductAppInterface
 }
 
 func NewOrderService(orderApp application.OrderAppInterface,
 	customerApp application.CustomerAppInterface,
 	productApp application.ProductAppInterface) *OrderService {
-	return &OrderService{order: orderApp, customer: customerApp, product: productApp}
+	return &OrderService{Order: orderApp, Customer: customerApp, Product: productApp}
 }
 
 func (od *OrderService) AddMultipleOrders(c *gin.Context) {
@@ -34,14 +34,14 @@ func (od *OrderService) AddMultipleOrders(c *gin.Context) {
 	}
 
 	// Validate customer id
-	_, err := od.customer.GetCustomerByID(orderRecieved.CustomerId)
+	_, err := od.Customer.GetCustomerByID(orderRecieved.CustomerId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	// Add to order table
-	order, e := od.order.AddOrder(&entity.Order{OrderId: orderRecieved.OrderId, CustomerId: orderRecieved.CustomerId})
+	order, e := od.Order.AddOrder(&entity.Order{OrderId: orderRecieved.OrderId, CustomerId: orderRecieved.CustomerId})
 	if e != nil {
 		c.JSON(http.StatusNotAcceptable, gin.H{"error": e.Error()})
 		return
@@ -55,7 +55,7 @@ func (od *OrderService) AddMultipleOrders(c *gin.Context) {
 			continue
 		}
 		status := "not placed"
-		product, err := od.product.GetProductByID(ord.ProductId)
+		product, err := od.Product.GetProductByID(ord.ProductId)
 
 		// Place order
 		if err == nil && product.ProductQuantity-ord.ProductQuantity >= 0 {
@@ -70,11 +70,11 @@ func (od *OrderService) AddMultipleOrders(c *gin.Context) {
 			// time.Sleep(10 * time.Second)
 
 			// Patch product
-			if _, patchErr := od.product.UpdateProduct(product); patchErr == nil {
+			if _, patchErr := od.Product.UpdateProduct(product); patchErr == nil {
 				status = "placed"
 			}
 		}
-		ordPlaced, err := od.order.AddOrderDetail(&entity.OrderDetail{
+		ordPlaced, err := od.Order.AddOrderDetail(&entity.OrderDetail{
 			OrderId:         order.OrderId,
 			OrderStatus:     status,
 			ProductId:       ord.ProductId,
@@ -98,7 +98,7 @@ func (od *OrderService) GetOrderByID(c *gin.Context) {
 	if e != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": e.Error()})
 	} else {
-		if order, err := od.order.GetOrderByID(id); err != nil {
+		if order, err := od.Order.GetOrderByID(id); err != nil {
 			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		} else {
 			c.JSONP(http.StatusOK, order)
