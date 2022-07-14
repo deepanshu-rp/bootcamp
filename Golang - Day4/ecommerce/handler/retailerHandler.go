@@ -11,12 +11,12 @@ import (
 )
 
 type RetailerService struct {
-	retail application.RetailerAppInterface
+	Retail application.RetailerAppInterface
 }
 
 // args??
 func NewRetailerService(rt application.RetailerAppInterface) *RetailerService {
-	return &RetailerService{retail: rt}
+	return &RetailerService{Retail: rt}
 }
 
 func (rd *RetailerService) AddRetailer(c *gin.Context) {
@@ -27,7 +27,7 @@ func (rd *RetailerService) AddRetailer(c *gin.Context) {
 		return
 	}
 
-	retailerNew, err := rd.retail.AddRetailer(&retailer)
+	retailerNew, err := rd.Retail.AddRetailer(&retailer)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 		return
@@ -44,7 +44,7 @@ func (rd *RetailerService) GetRetailerByID(c *gin.Context) {
 	if e != nil {
 		c.AbortWithError(http.StatusBadRequest, e)
 	} else {
-		if retailer, err := rd.retail.GetRetailerByID(id); err != nil {
+		if retailer, err := rd.Retail.GetRetailerByID(id); err != nil {
 			c.AbortWithStatus(http.StatusNotFound)
 		} else {
 			c.JSONP(http.StatusOK, retailer)
