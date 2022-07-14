@@ -35,6 +35,13 @@ func (pd *ProductService) AddProduct(c *gin.Context) {
 		return
 	}
 
+	// Validate product
+	validationErr := product.ValidateInput()
+	if validationErr != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": validationErr})
+		return
+	}
+
 	productNew, err := pd.product.AddProduct(&product)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
@@ -102,6 +109,12 @@ func (pd *ProductService) UpdateProduct(c *gin.Context) {
 	}
 	newProduct.ProductQuantity = updateProduct.ProductQuantity
 	newProduct.ProductPrice = updateProduct.ProductPrice
+
+	fmt.Println(newProduct)
+	if validationErr := newProduct.ValidateInput(); validationErr != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": validationErr})
+		return
+	}
 
 	// Concurrency management
 	if locked := concurrency.Mutex.Lock(newProduct.ProductId); !locked {
