@@ -13,12 +13,12 @@ import (
 )
 
 type ProductService struct {
-	product application.ProductAppInterface
-	retail  application.RetailerAppInterface
+	Product application.ProductAppInterface
+	Retail  application.RetailerAppInterface
 }
 
 func NewProductService(pdt application.ProductAppInterface, rt application.RetailerAppInterface) *ProductService {
-	return &ProductService{product: pdt, retail: rt}
+	return &ProductService{Product: pdt, Retail: rt}
 }
 
 func (pd *ProductService) AddProduct(c *gin.Context) {
@@ -30,7 +30,7 @@ func (pd *ProductService) AddProduct(c *gin.Context) {
 	}
 
 	// Check if retailer valid
-	if _, err := pd.retail.GetRetailerByID(uuid.UUID(product.RetailerId)); err != nil {
+	if _, err := pd.Retail.GetRetailerByID(uuid.UUID(product.RetailerId)); err != nil {
 		c.JSON(http.StatusNotFound, err.Error())
 		return
 	}
@@ -42,7 +42,7 @@ func (pd *ProductService) AddProduct(c *gin.Context) {
 		return
 	}
 
-	productNew, err := pd.product.AddProduct(&product)
+	productNew, err := pd.Product.AddProduct(&product)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 		return
@@ -53,7 +53,7 @@ func (pd *ProductService) AddProduct(c *gin.Context) {
 
 func (pd *ProductService) GetAllProducts(c *gin.Context) {
 
-	products, err := pd.product.GetAllProducts()
+	products, err := pd.Product.GetAllProducts()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
@@ -74,7 +74,7 @@ func (pd *ProductService) GetProductByID(c *gin.Context) {
 	if e != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": e.Error()})
 	} else {
-		if product, err := pd.product.GetProductByID(id); err != nil {
+		if product, err := pd.Product.GetProductByID(id); err != nil {
 			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		} else {
 			c.JSONP(http.StatusOK, product)
@@ -102,7 +102,7 @@ func (pd *ProductService) UpdateProduct(c *gin.Context) {
 	}
 
 	// Get product
-	newProduct, err := pd.product.GetProductByID(id)
+	newProduct, err := pd.Product.GetProductByID(id)
 	if err != nil {
 		c.JSON(http.StatusPreconditionFailed, gin.H{"error": err.Error()})
 		return
@@ -125,7 +125,7 @@ func (pd *ProductService) UpdateProduct(c *gin.Context) {
 	// time.Sleep(5 * time.Second)
 
 	// Patch product
-	if _, err := pd.product.UpdateProduct(newProduct); err != nil {
+	if _, err := pd.Product.UpdateProduct(newProduct); err != nil {
 		c.JSON(http.StatusNotModified, gin.H{"error": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, newProduct)
