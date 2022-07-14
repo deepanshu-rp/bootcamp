@@ -97,6 +97,10 @@ Testify
 mockery
 > github.com/vektra/mockery
 
+## Run Unit Tests
+
+	go test ./... -v -coverpkg=./...
+
 # 4. Go Routes
 
 ### Authentication
