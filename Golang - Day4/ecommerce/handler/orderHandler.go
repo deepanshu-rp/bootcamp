@@ -49,10 +49,15 @@ func (od *OrderService) AddMultipleOrders(c *gin.Context) {
 
 	// Add order details
 	for _, ord := range orderRecieved.Specs {
-		// Check quantity
-		fmt.Println(ord.ProductId)
+
+		// Validate order spec
+		if validationErr := ord.ValidateInput(); validationErr != nil {
+			continue
+		}
 		status := "not placed"
 		product, err := od.product.GetProductByID(ord.ProductId)
+
+		// Place order
 		if err == nil && product.ProductQuantity-ord.ProductQuantity >= 0 {
 			product.ProductQuantity -= ord.ProductQuantity
 

@@ -1,6 +1,9 @@
 package entity
 
 import (
+	"regexp"
+
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
 )
@@ -40,4 +43,15 @@ func (o Order) TableName() string {
 }
 func (od OrderDetail) TableName() string {
 	return "order_detail"
+}
+
+func (o OrderSpec) ValidateInput() error {
+	err := validation.ValidateStruct(&o,
+		validation.Field(&o.ProductId, validation.Required, validation.Match(regexp.MustCompile(uuidRegex))),
+		validation.Field(&o.ProductQuantity, validation.Required, validation.Min(0)),
+	)
+	if err != nil {
+		return err
+	}
+	return nil
 }
