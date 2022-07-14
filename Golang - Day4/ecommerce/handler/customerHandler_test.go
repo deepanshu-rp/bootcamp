@@ -1,7 +1,8 @@
-package application_test
+package handler_test
 
 import (
 	"ecommerce/domain/entity"
+	"ecommerce/handler"
 	mocks "ecommerce/mocks/application"
 	"testing"
 
@@ -26,25 +27,32 @@ var (
 func TestGetCustomerByID(t *testing.T) {
 	mockApp := mocks.NewCustomerAppInterface(t)
 	mockApp.On("GetCustomerByID", mock.AnythingOfType("uuid.UUID")).Return(&customer1, nil)
-	testVal, err := mockApp.GetCustomerByID(customer1.CustomerId)
-	if err == nil {
-		assert.Equal(t, &customer1, testVal)
+	testApp := handler.NewCustomerService(mockApp)
+
+	customers := []entity.Customer{customer1, customer1}
+	for _, cust := range customers {
+		result, _ := testApp.Cust.GetCustomerByID(cust.CustomerId)
+		assert.Equal(t, result, &cust)
 	}
+
 }
 
 func TestAddCustomer(t *testing.T) {
 	mockApp := mocks.NewCustomerAppInterface(t)
+	customers := []entity.Customer{customer1, customer2}
 
-	// Error??
-	// mockApp.On("AddCustomer", mock.AnythingOfType("*entity.Customer")).Return(
-	// 	func(c *entity.Customer) (*entity.Customer, error) {
-	// 		return c, nil
-	// 	},
-	// )
-
-	mockApp.On("AddCustomer", mock.AnythingOfType("*entity.Customer")).Return(&customer1, nil)
-	testVal, err := mockApp.AddCustomer(&customer2)
-	if err == nil {
-		assert.Equal(t, &customer1, testVal)
+	mockApp.On("AddCustomer", mock.AnythingOfType("*entity.Customer")).Return(
+		func(c *entity.Customer) *entity.Customer {
+			return c
+		},
+		func(c *entity.Customer) error {
+			return nil
+		},
+	)
+	testApp := handler.NewCustomerService(mockApp)
+	for _, cust := range customers {
+		result, _ := testApp.Cust.AddCustomer(&cust)
+		assert.Equal(t, result, &cust)
 	}
+
 }

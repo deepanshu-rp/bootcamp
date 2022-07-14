@@ -12,11 +12,11 @@ import (
 )
 
 type CustomerService struct {
-	cust application.CustomerAppInterface
+	Cust application.CustomerAppInterface
 }
 
 func NewCustomerService(cd application.CustomerAppInterface) *CustomerService {
-	return &CustomerService{cust: cd}
+	return &CustomerService{Cust: cd}
 }
 
 func (cd *CustomerService) AddCustomer(c *gin.Context) {
@@ -36,7 +36,7 @@ func (cd *CustomerService) AddCustomer(c *gin.Context) {
 	}
 
 	// Add to DB
-	cust, err := cd.cust.AddCustomer(&customer)
+	cust, err := cd.Cust.AddCustomer(&customer)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, utils.FormatErrorResponse(entity.ErrCustomerNotAdded.Error(), err.Error()))
 		return
@@ -54,7 +54,7 @@ func (cd *CustomerService) GetCustomerByID(c *gin.Context) {
 	if e != nil {
 		c.JSON(http.StatusBadRequest, utils.FormatErrorResponse(entity.ErrInvalidCustomerUUID.Error(), e.Error()))
 	} else {
-		if customer, err := cd.cust.GetCustomerByID(id); err != nil {
+		if customer, err := cd.Cust.GetCustomerByID(id); err != nil {
 			c.JSON(http.StatusNotFound, utils.FormatErrorResponse(entity.ErrInvalidCustomerUUID.Error(), err.Error()))
 		} else {
 			c.JSONP(http.StatusOK, customer)
