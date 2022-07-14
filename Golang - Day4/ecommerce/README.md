@@ -75,8 +75,29 @@ Download repo to your local machine:
     ON UPDATE CASCADE);
 
 
+# 3. Go Packages
+GORM
+> github.com/jinzhu/gorm
 
-# 3. Go Routes
+MySQL Driver
+> github.com/go-sql-driver/mysql
+
+Gin Web Framework
+> github.com/gin-gonic/gin
+
+UUID
+> github.com/google/uuid
+
+ozzo-validation
+> github.com/go-ozzo/ozzo-validation
+
+Testify
+> github.com/stretchr/testify/
+
+mockery
+> github.com/vektra/mockery
+
+# 4. Go Routes
 
 ### Authentication
 Use Basic Auth as authentication header while making API calls
