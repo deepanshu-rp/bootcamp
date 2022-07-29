@@ -1,0 +1,63 @@
+body {
+    margin: 0;
+}
+
+.header {
+    background-color: pink;
+    width: 100%;
+    height: 50px;
+    top: 0;
+    left: 0;
+    display: flex;
+    position: fixed;
+    justify-content: center;
+}
+
+.container {
+    display: flex;
+    height: 3000px;
+    background-color: black;
+    margin-top: 50px;
+}
+
+.menu, .aside, .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+}
+
+.menu {
+    background-color: yellow;
+    flex: 1;
+}
+
+.menu ul {
+    list-style-type: none;
+    padding-inline-start: 0;
+    margin-block-start: 0em;
+    margin-block-end: 0em;
+}
+
+.aside {
+    flex: 1;
+    background-color: orange;
+}
+
+.content {
+    flex: 6;
+    background-color: greenyellow;
+}
+
+p {
+    margin: 0;
+}
+
+.footer {
+    display: flex;
+    /*why whitespace disappears in this case*/
+    /* display: block; */
+    background-color: aqua;
+    height: 50px;
+    justify-content: center;
+}
