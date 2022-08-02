@@ -56,7 +56,7 @@ tr:nth-child(odd) {
     background-color: rgb(48, 180, 48);
 }
 
-.header {
+header {
     background-color: pink;
     width: 100%;
     height: 60px;
@@ -69,14 +69,14 @@ tr:nth-child(odd) {
 
 
 
-.container {
+main {
     display: flex;
     min-height: 90vh;
     background-color: black;
     margin-top: 60px;
 }
 
-.menu, .aside, .content {
+nav, aside, article {
     display: flex;
     flex-direction: column;
     justify-content: start;
@@ -84,13 +84,13 @@ tr:nth-child(odd) {
     padding: 8px 0px;
 }
 
-.menu {
+nav {
     background-color: yellow;
     flex: 1;
     align-content: center;
 }
 
-.menu ul {
+nav ul {
     list-style-type: none;
     padding-inline-start: 0;
     margin-block-start: 0em;
@@ -98,17 +98,17 @@ tr:nth-child(odd) {
     text-align: center;
 }
 
-.aside {
+aside {
     flex: 1;
     background-color: orange;
 }
 
-.content {
+article {
     flex: 6;
     background-color: greenyellow;
 }
 
-.footer {
+footer {
     display: flex;
     background-color: aqua;
     height: 50px;
@@ -125,11 +125,11 @@ tr:nth-child(odd) {
 }
 
 @media screen and (max-width: 800px) {
-    .container {
+    main {
         flex-direction: column;
     }
 
-    .content {
+    article {
         min-height: 300px;
     }
 
@@ -150,7 +150,7 @@ tr:nth-child(odd) {
         margin-block-start: 0;
         margin-block-end: 0;
     }
-    .content {
+    article {
         min-height:200px;
     }
 
