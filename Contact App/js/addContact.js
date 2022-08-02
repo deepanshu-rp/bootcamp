@@ -1,19 +1,19 @@
-function validateInfo(contact_name, contact_number) {
-    let phone = contact_number;
-    var phoneNum = /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/; 
-    return contact_name.length>0 && phone.match(phoneNum)
-}
-
+const KEY = "contacts"
 
 function addContact(form) {
-    let contact_name = form.elements["name"].value
-    let contact_number = form.elements["contact_number"].value
-
-    if(!validateInfo(contact_name, contact_number)) {
-        alert("Invalid input")
-        return
+    let contact = {
+        "name": form.elements["name"].value,
+        "number": form.elements["contact_number"].value
     }
 
-    localStorage.setItem(contact_name, contact_number)
+    let oldContacts = localStorage.getItem(KEY)
+    if(oldContacts === null) {
+        let newContacts = [contact]
+        localStorage.setItem(KEY, JSON.stringify(newContacts))
+    } else {
+        let newContacts = JSON.parse(oldContacts)
+        newContacts.push(contact)
+        localStorage.setItem(KEY, JSON.stringify(newContacts))
+    }
     alert("Contact Saved!")
 }
